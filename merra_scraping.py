@@ -10,23 +10,14 @@ from calendar import monthrange
 from opendap_download.multi_processing_download import DownloadManager
 
 ####### INPUTS - CHANGE THESE #########
-username = 'INPUT_YOUR_USERNAME_HERE' # Username for MERRA download account
-password = 'INPUT_YOUR_PASSWORD_HERE' # Password for MERRA download account
-years = [2007, 2008, 2009, 2010, 2011] # List of years for which data will be downloaded
-field_id = 'T2M' # ID of field in MERRA-2 - find ID here: https://gmao.gsfc.nasa.gov/pubs/docs/Bosilovich785.pdf 
-field_name = 'temperature' # Name of field to be stored with downloaded data (can use any name you like)
-database_name = 'M2I1NXASM' # Name of database in which field is stored, can be looked up by ID here: https://gmao.gsfc.nasa.gov/pubs/docs/Bosilovich785.pdf 
-database_id = 'inst1_2d_asm_Nx' # ID of database database in which field is stored, also can be looked up by ID here: https://gmao.gsfc.nasa.gov/pubs/docs/Bosilovich785.pdf 
-locs = [('maputo', -25.9629, 32.5732), # List of locations for which data will be downloaded. Each location is a three-tuple, consisting of name (string), latitude, and longitude floats)
-        ('cdelgado', -12.3335, 39.3206), 
-        ('manica', -18.9438, 32.8649),
-        ('gaza', -23.0222, 32.7181),
-        ('sofala', -19.2039, 34.8624),
-        ('tete', -16.1328, 33.6364),
-        ('zambezia', -16.5639, 36.6094),
-        ('nampula', -15.1266, 39.2687),
-        ('niassa', -12.7826, 36.6094),
-        ('inhambane', -23.8662, 35.3827)]
+username = 'mufed' # Username for MERRA download account
+password = 'sA2yhuge' # Password for MERRA download account
+years = [2019] # List of years for which data will be downloaded
+field_id = 'SWGDN' # ID of field in MERRA-2 - find ID here: https://gmao.gsfc.nasa.gov/pubs/docs/Bosilovich785.pdf 
+field_name = 'database_file' # Name of field to be stored with downloaded data (can use any name you like)
+database_name = 'M2T1NXLFO' # Name of database in which field is stored, can be looked up by ID here: https://gmao.gsfc.nasa.gov/pubs/docs/Bosilovich785.pdf 
+database_id = 'tavg1_2d_lfo_Nx' # ID of database database in which field is stored, also can be looked up by ID here: https://gmao.gsfc.nasa.gov/pubs/docs/Bosilovich785.pdf 
+locs = [('israel', 31.16, 34.51)] # List of locations for which data will be downloaded. Each location is a three-tuple, consisting of name (string), latitude, and longitude floats)
 conversion_function = lambda x: x - 273.15 # Unit conversion function to be applied to daily data. Here is the unit conversion for temperature from Kelvin to Celsius. 
 aggregator = 'mean' # Method by which data will be aggregated over days and weeks. Can be "sum", "mean", "min", or "max" (for example, mean will download hourly data, mean daily data, and mean weekly data)
 
@@ -171,7 +162,7 @@ for loc, lat, lon in locs:
     for file in os.listdir(field_name + '/' + loc):
         if '.nc4' in file:
             try:
-                with xr.open_mfdataset(field_name + '/' + loc + '/' + file, preprocess=extract_date) as df:
+                with xr.open_mfdataset(field_name + '/' + loc + '/' + file,sep='/', preprocess=extract_date) as df:
                     dfs.append(df.to_dataframe())
             except:
                 print('Issue with file ' + file)
